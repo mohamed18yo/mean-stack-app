@@ -10,10 +10,11 @@ import { PostService } from "../posts.service";
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.css']
 })
-export class PostListComponent implements OnInit ,OnDestroy {
+export class PostListComponent implements OnInit, OnDestroy {
 
   constructor(private postServis: PostService) { }
   private postSub: Subscription;
+  isLoading = false;
   posts: Post[] = [
     // {
     //   title: 'This First Post in this app hello world',
@@ -25,12 +26,19 @@ export class PostListComponent implements OnInit ,OnDestroy {
     // },
   ]
   ngOnInit() {
-    this.postServis.getPost();
+    this.isLoading = true;
+    this.postServis.getPosts();
+
     this.postServis.getPostUpdate().subscribe((posts: Post[]) => {
+      this.isLoading = false;
       this.posts = posts
+
     })
   }
+  onDelete(postId: string) {
+    this.postServis.deletePost(postId)
+  }
   ngOnDestroy() {
-    this.postSub.unsubscribe()
+    // this.postSub.unsubscribe()
   }
 }

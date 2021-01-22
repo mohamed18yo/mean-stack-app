@@ -10,7 +10,7 @@ import { Post } from './posts/posts.model'
 })
 export class AppComponent {
   title = 'mean-stack-app';
-  storgPost: Post[] = []
+  storgPost: Post[] = []   
 
   onAddPost(post){
     this.storgPost.push(post)

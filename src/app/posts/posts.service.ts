@@ -13,8 +13,9 @@ export class PostService {
   private postsUpdate = new Subject<Post[]>()
   constructor(private http: HttpClient, private router:Router) { }
 
-  getPosts() {
-    this.http.get<{ message: string, posts: any }>('http://localhost:3000/api/posts')
+  getPosts(postsPerPage:number, currentPage:number) {
+    const queryParams= `?pagesize=${postsPerPage}&page=${currentPage}`
+    this.http.get<{ message: string, posts: any }>('http://localhost:3000/api/posts'+ queryParams)
       .pipe(map((postData) => {
         return postData.posts.map(post => {
           return {
@@ -40,6 +41,8 @@ export class PostService {
     postData.append('title', title)
     postData.append('content', content)
       postData.append('image', image, title)
+
+    console.log(postData);
 
     this.http.post<{ message: string, postId: string }>('http://localhost:3000/api/posts', postData)
       .subscribe((res) => {

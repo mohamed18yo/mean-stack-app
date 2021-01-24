@@ -4,8 +4,14 @@
   <span><a mat-button routerLink="/">My Application  </a></span>
   <span class="spacer"></span>
   <ul>
-    <li>
+    <li *ngIf="isAuth">
       <span><a mat-button routerLink="/create" routerLinkActive="mat-primary">  New Post</a></span>
+    </li>
+    <li *ngIf="!isAuth">
+      <span><a mat-button routerLink="/login" routerLinkActive="mat-primary"> Login</a></span>
+    </li>
+    <li *ngIf="isAuth">
+      <span><button mat-button (click)="onLogout()"> Logout</button></span>
     </li>
   </ul>
 

@@ -14,6 +14,6 @@ input[type="file"]{
   height: 8rem;
   margin: 1rem 0;
 }
-.image-preview img{
+.image-preview img{  
   height: 100%;
 }

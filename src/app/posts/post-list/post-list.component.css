@@ -8,3 +8,6 @@ mat-expansion-panel{
 .mat-body-1{
   text-align: center;
 }
+mat-paginator{
+  margin-top: 1rem;
+}

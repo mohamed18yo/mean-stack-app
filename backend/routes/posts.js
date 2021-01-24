@@ -2,6 +2,7 @@ var express = require("express");
 
 var multer = require("multer");
 var Post = require("../model/post");
+var auth = require('../middleware/check-auth')
 var router = express.Router();
 
 const MIME_TYPE_MAP = {
@@ -16,7 +17,7 @@ const storge = multer.diskStorage({
     if (isValid) {
       error = null;
     }
-    cb(error, "/public//images");
+    cb(error, 'images');
   },
   filename: (req, file, cb) => {
     const name = file.originalname.toLowerCase().split(" ").join("-");
@@ -25,7 +26,8 @@ const storge = multer.diskStorage({
   },
 });
 
-router.post("",
+router.post(
+  "",auth,
   multer({ storge: storge }).single("image"),
   (req, res, next) => {
     // const post = req.body
@@ -33,6 +35,7 @@ router.post("",
       title: req.body.title,
       content: req.body.content,
     });
+    console.log(req.body);
     post.save().then((result) => {
       res.status(201).json({
         postId: result._id,
@@ -43,7 +46,13 @@ router.post("",
 );
 
 router.get("", (req, res) => {
-  Post.find().then((documents) => {
+const pageSize= +req.query.pagesize
+const currentPage= +req.query.page
+const postQuery= Post.find()
+if(pageSize&& currentPage){
+  postQuery.skip(pageSize *(currentPage-1)).limit(pageSize)
+}
+postQuery.then((documents) => {
     res.status(200).json({
       message: "Posts fetched succesfully!",
       posts: documents,
@@ -59,14 +68,14 @@ router.get("", (req, res) => {
   //
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id",auth, (req, res, next) => {
   // console.log(req.params.id);
   Post.deleteOne({ _id: req.params.id }).then((result) => {
-    // console.log(result);
+    //  console.log(result);
     res.status(200).json({ message: "post deleted" });
   });
 });
-router.put("/:id", (req, res, next) => {
+router.put("/:id",auth, (req, res, next) => {
   const post = new Post({
     _id: req.body.id,
     title: req.body.title,

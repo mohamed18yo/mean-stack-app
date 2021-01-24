@@ -3,7 +3,7 @@ import { Post } from "../posts.model";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { PostService } from "../posts.service";
 import { ActivatedRoute, ParamMap } from "@angular/router";
-import {mimeType} from './mime-type.validator'
+// import {mimeType} from './mime-type.validator'
 
 
 @Component({
@@ -28,7 +28,7 @@ export class CreatePostComponent implements OnInit {
       'title': new FormControl(null, { validators: [Validators.required, Validators.minLength(3)] }),
       'content': new FormControl(null, { validators: [Validators.required] }),
       'image': new FormControl(null,  {validators:[Validators.required],
-        asyncValidators:[mimeType]
+        // asyncValidators:[mimeType]
       } )
     })
     this.route.paramMap.subscribe((paramMap: ParamMap) => {

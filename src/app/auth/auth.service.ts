@@ -4,7 +4,15 @@ import { HttpClient } from "@angular/common/http"
 import { authData } from "./auth-data.model"
 import { Subject } from "rxjs";
 import { Router } from "@angular/router";
+import { environment } from "../../environments/environment"
+import { error } from "protractor";
 
+export interface authResData {
+  token: any,
+  expiresIn: number,
+  message: string
+}
+const BACKEND_URL = environment.apiUrl + "/users"
 @Injectable({
   providedIn: 'root'
 })
@@ -12,16 +20,21 @@ import { Router } from "@angular/router";
 export class AuthService {
   private token: string;
   private authStatusListner = new Subject<boolean>();
+   messageErr = new Subject<string>();
+
   private isAuth = false;
   private tokenTimer: any
   constructor(private http: HttpClient, private router: Router) { }
-
+  getMessage(){
+    return this.messageErr
+  }
   getToken() {
     return this.token
   }
   getAuthStatusListner() {
     return this.authStatusListner.asObservable();
   }
+
   getAuth() {
     return this.isAuth
   }
@@ -30,7 +43,7 @@ export class AuthService {
       email: email,
       password: password
     }
-    this.http.post('http://localhost:3000/users/signup', user).subscribe(res => {
+    this.http.post(BACKEND_URL + '/signup', user).subscribe(res => {
       console.log(res);
 
     })
@@ -40,7 +53,7 @@ export class AuthService {
       email: email,
       password: password
     }
-    this.http.post<{ token: any, expiresIn: number }>('http://localhost:3000/users/login', user).subscribe(res => {
+    this.http.post<{ token: any, expiresIn: number, message: any }>(BACKEND_URL + '/login', user).subscribe(res => {
       const token = res.token;
       this.token = token
       if (token) {
@@ -50,19 +63,24 @@ export class AuthService {
         const expirationDate = new Date(now.getTime() + expiresInDuration * 1000)
         this.isAuth = true
         this.authStatusListner.next(true)
-
-
-
-
         console.log('exDate' + expirationDate);
-
         this.saveAuthData(token, expirationDate)
         this.router.navigate(['/'])
       }
+      // let msg = res.message
+      // console.log(msg);
+
+      // this.authErr.next(msg)
 
       // console.log('your token: '+ token);
 
-    })
+    },
+    error=>{
+
+     this.messageErr= error.error.message
+      console.log(error.error.message);
+
+    } )
   }
 
   logout() {

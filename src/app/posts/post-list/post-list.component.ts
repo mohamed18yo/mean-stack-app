@@ -24,23 +24,14 @@ export class PostListComponent implements OnInit, OnDestroy {
   currentPage=1
 
   postSizeOptions = [1, 2, 5, 10]
-  posts: Post[] = [
-    // {
-    //   title: 'This First Post in this app hello world',
-    //   content: 'some content to this post '
-    // },
-    // {
-    //   title: 'This Sconde Post in this app hello world',
-    //   content: 'some content to this post '
-    // },
-  ]
+  posts: Post[]=[]
   ngOnInit() {
     this.isLoading = true;
     this.postServis.getPosts(this.postsPerPage, this.currentPage);
 
-    this.postServis.getPostUpdate().subscribe((posts: Post[]) => {
+    this.postServis.getPostUpdate().subscribe((postsData: Post[]) => {
       this.isLoading = false;
-      this.posts = posts
+      this.posts = postsData
 
     })
     this.isAuth= this.authService.getAuth()

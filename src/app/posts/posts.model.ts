@@ -4,7 +4,7 @@
 export interface Post {
   id: string,
   title: string,
-  content: String
-
-}  
+  content: string,
+  imagePath: string
+}
 

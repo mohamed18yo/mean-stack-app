@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MONGO_PW": "admin",
+    "JWT_KEY": "hello_world"
+  }
+}
+  

@@ -27,9 +27,10 @@ export class CreatePostComponent implements OnInit {
     this.form = new FormGroup({
       'title': new FormControl(null, { validators: [Validators.required, Validators.minLength(3)] }),
       'content': new FormControl(null, { validators: [Validators.required] }),
-      'image': new FormControl(null,  {validators:[Validators.required],
+      'image': new FormControl(null, {
+        // validators: [Validators.required],
         // asyncValidators:[mimeType]
-      } )
+      })
     })
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
@@ -39,7 +40,8 @@ export class CreatePostComponent implements OnInit {
         this.post = this.postService.getPost(this.postId)
         this.form.setValue({
           title: this.post.title,
-          content: this.post.content
+          content: this.post.content,
+          image: null
         })
         this.isLoading = false
       } else {
@@ -50,12 +52,12 @@ export class CreatePostComponent implements OnInit {
   }
   onImagePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];
-    this.form.patchValue({image: file })
+    this.form.patchValue({ image: file })
     this.form.get('image').updateValueAndValidity()
     const reader = new FileReader()
-    reader.onload= ()=>{
+    reader.onload = () => {
 
-      this.imagePreview = reader.result ;
+      this.imagePreview = reader.result;
 
     }
     reader.readAsDataURL(file)
@@ -77,7 +79,7 @@ export class CreatePostComponent implements OnInit {
         this.form.value.title,
         this.form.value.content,
         this.form.value.image
-        )
+      )
     } else {
       this.postService.editPost(this.postId, this.form.value.title, this.form.value.content)
     }

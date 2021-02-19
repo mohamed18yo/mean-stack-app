@@ -31,15 +31,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.isLoginMode) {
       this.isLoading = true
       this.authService.login(form.value.email, form.value.password)
+      this.authService.getMessage().subscribe((msg)=>{
+        this.errorMsg= msg
+         console.log("error Message : "+ msg );
+      })
+
+
     } else {
       this.authService.createUser(form.value.email, form.value.password)
       this.isLoading = true
       this.isLoginMode = true
     }
     this.isLoading = false
-    this.errorMsg = this.authService.getMessage().subscribe((msg) => {
-      console.log("error Message : " + msg);
-    })
+
 
 
   }

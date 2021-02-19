@@ -20,12 +20,12 @@ const BACKEND_URL = environment.apiUrl + "/users"
 export class AuthService {
   private token: string;
   private authStatusListner = new Subject<boolean>();
-   messageErr = new Subject<string>();
+  private messageErr = new Subject<string>();
 
   private isAuth = false;
   private tokenTimer: any
   constructor(private http: HttpClient, private router: Router) { }
-  getMessage(){
+  getMessage() {
     return this.messageErr
   }
   getToken() {
@@ -44,7 +44,7 @@ export class AuthService {
       password: password
     }
     this.http.post(BACKEND_URL + '/signup', user).subscribe(res => {
-      console.log(res);
+      // console.log(res);
 
     })
   }
@@ -63,7 +63,7 @@ export class AuthService {
         const expirationDate = new Date(now.getTime() + expiresInDuration * 1000)
         this.isAuth = true
         this.authStatusListner.next(true)
-        console.log('exDate' + expirationDate);
+        // console.log('exDate' + expirationDate);
         this.saveAuthData(token, expirationDate)
         this.router.navigate(['/'])
       }
@@ -75,12 +75,12 @@ export class AuthService {
       // console.log('your token: '+ token);
 
     },
-    error=>{
+      error => {
+        const msg = error.error.message
+        this.messageErr.next(msg)
+        // console.log(error.error.message);
 
-     this.messageErr= error.error.message
-      console.log(error.error.message);
-
-    } )
+      })
   }
 
   logout() {
@@ -91,7 +91,7 @@ export class AuthService {
     this.router.navigate(['/'])
   }
   private setAuthTimer(duration: number) {
-    console.log('setting timer: ' + duration);
+    // console.log('setting timer: ' + duration);
 
     this.tokenTimer = setTimeout(() => {
       this.logout()
@@ -104,14 +104,14 @@ export class AuthService {
     if (!authInformation) {
       return
     }
-    console.log(authInformation, expiresIn);
+    // console.log(authInformation, expiresIn);
 
     if (expiresIn > 0) {
       this.token = authInformation.token
       this.isAuth = true
       this.setAuthTimer(expiresIn / 1000)
       this.authStatusListner.next(true)
-      console.log('hello from auto auth');
+      // console.log('hello from auto auth');
 
     }
   }

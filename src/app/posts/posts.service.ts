@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http'
 import { Router } from "@angular/router";
 import { environment } from "../../environments/environment"
 
-const BACKEND_URL = environment.apiUrl +"/posts/"
+const BACKEND_URL = environment.apiUrl + "/posts/"
 @Injectable({
   providedIn: 'root'
 })
@@ -49,7 +49,7 @@ export class PostService {
     postData.append('content', content)
     postData.append('image', image, title)
 
-    console.log(postData);
+    // console.log(postData);
 
     this.http.post<{ message: string, postId: string }>(BACKEND_URL, postData)
       .subscribe((res) => {
@@ -62,7 +62,7 @@ export class PostService {
   deletePost(postId: string) {
     this.http.delete(BACKEND_URL + postId)
       .subscribe(() => {
-        console.log('post deleted');
+        // console.log('post deleted');
         const updatePosts = this.posts.filter(post => post.id !== postId)
         this.posts = updatePosts
         this.postsUpdate.next([...this.posts])
@@ -76,7 +76,7 @@ export class PostService {
     }
     this.http.put(BACKEND_URL+ postId, updatedPost)
       .subscribe((res) => {
-        console.log(res);
+        // console.log(res);
         this.router.navigate(['/'])
       })
   }

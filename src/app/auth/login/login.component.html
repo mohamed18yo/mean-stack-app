@@ -1,3 +1,16 @@
+
+
+
+
+<div class=" alert-danger" *ngIf="errorMsg">
+  <p>{{ errorMsg }}</p>
+</div>
+ <!-- <app-alert
+  [message]="error"
+  *ngIf="error"
+  (close)="onHandleError()"
+></app-alert> -->
+
 <mat-card>
 
   <mat-spinner *ngIf="isLoading" color="accent"></mat-spinner>
